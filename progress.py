@@ -6,7 +6,7 @@ Simple and easy to use progress bar.
 Auther : Tarun Kumar
 """
 
-from IPython.display import display, clear_output
+from IPython.display import clear_output
 import time
 
 class Progress:
