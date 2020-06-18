@@ -39,7 +39,7 @@
   ```python
   # defiling progress bar elements
   epoch = P.Elememt("Epoch",0)
-  progress_time = Progress.ProgressTime(postfix="/epoch")
+  progress_time = P.ProgressTime(postfix="/epoch")
   batch = P.Elememt("Batch",0,display_name='hide',max_value = 70, value_display_mode = 1)
   loss = P.Elememt("Loss",0)
   acc = P.Elememt("Acc",0)
