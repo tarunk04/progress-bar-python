@@ -127,11 +127,12 @@ class Progress:
         self.history = []
     
     def initialize(self):
-        self.time = time
         self.val = 0
         self.history = []
-        self.bar.initialize_bar()
-        self.progress_time.initialize()
+        if self.bar != None:
+            self.bar.initialize_bar()
+        if self.progress_time != None:
+            self.progress_time.initialize()
     
     def add(self,element):
         if element == None:
@@ -181,26 +182,31 @@ class Progress:
         self.val += step
         if self.val > self.max_val:
             self.val = 1
-            self.bar.initialize_bar()
-            self.progress_time.initialize()
+            if self.bar != None:
+                self.bar.initialize_bar()
+            if self.progress_time != None:
+                self.progress_time.initialize()
         self.output()
         
     def output(self):
         clear_output(wait=True)
+        bar = ""
         if self.bar_mode:
             bar = "{}"
+            self.bar(self.val)
         out = self.prefix + bar + self.postfix
-        self.bar(self.val)
         for h in self.history:
             print(h)
         print(out.format(*[e() for e in self.elements]))
     
     def get_format(self): 
+        bar = ""
         if self.bar_mode:
             bar = "{bar}"
         return self.prefix + bar + self.postfix
     
     def set_cursor_position(self):
+        bar = ""
         if self.bar_mode:
             bar = "{}"
         out = self.prefix + bar + self.postfix
