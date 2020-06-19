@@ -1,6 +1,10 @@
 # Progress Bar Python - for Jupyter Notebook [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/tarunk04/progress-bar-python/blob/master/LICENSE)
 
- Simple and easy to use progress bar to monitor the progress in required task. Only supported Jupyter Notebook. No specific package requirement, can run on any Python 3 environment.
+Simple and easy to use progress bar to monitor the progress in required task. Only supported Jupyter Notebook. No specific package requirement, can run on any Python 3 environment.
+
+# Medium Post (Tutorial)
+
+Find the complete guide how to use this library step by step. Read medium post [here](https://medium.com/analytics-vidhya/progress-bar-python-for-jupyter-notebook-f68224955810).
 
 # Installation 
 
