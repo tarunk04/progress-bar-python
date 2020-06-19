@@ -39,7 +39,7 @@
   ```python
   # defining progress bar elements
   epoch = P.Elememt("Epoch",0)
-  progress_time = Progress.ProgressTime(postfix="/epoch")
+  progress_time = P.ProgressTime(postfix="/epoch")
   batch = P.Elememt("Batch",0,display_name='hide',max_value = 70, value_display_mode = 1)
   loss = P.Elememt("Loss",0)
   acc = P.Elememt("Acc",0)
@@ -63,7 +63,8 @@
   name: name for displaying in progress for the element
   initial_value: initial value for the element
   max_value: maximum value that element can take. Note only required in display_mode =1.
-  display_name: value can take form ["normal","reverse","hide"]. In "reverse" mode name will displayed after value. "hide" will hide the name from progress
+  display_name: value can take form ["normal","reverse","hide"]. In "reverse" mode name will displayed after value. 
+                "hide" will hide the name from progress
   value_display_mode: [0,1].default 0. Format "Epoch: 1". For 1 format "Epoch 1/10".
   separator: default ":". can be changed according to preference
   """
@@ -99,8 +100,10 @@
   p = p(epoch)(bar)(batch)(progress_time)("- ")(loss)("- ")(acc)
   
   """
-  * Any number of elements can be added. Use Bar and ProgressTime only once otherwise it   may cause unexpected issues.
-  * To just add text anywhere in between simply add p(elemt1)(bar)("Sample Text")		    (elemt2)....("Some More Text")...(elemtN)  
+  * Any number of elements can be added. Use Bar and ProgressTime only once otherwise it 
+    may cause unexpected issues.
+  * To just add text anywhere in between simply add 
+    p(elemt1)(bar)("Sample Text")(elemt2)....("Some More Text")...(elemtN)  
   """
   ```
 
@@ -119,7 +122,8 @@
           
           ----------------
           """
-          # updating progress bar elements. Values each elements can be updated by just passing the new values like below
+          # updating progress bar elements. Values each elements can be updated by just passing the 
+          # new values like below
           loss(random.randint(1000,5000)/10000) # passing dummy number
           acc(random.randint(1,100)/100) # passing dummy number
           batch(i+1)
