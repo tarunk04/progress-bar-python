@@ -6,7 +6,6 @@ Simple and easy to use progress bar.
 Auther : Tarun Kumar
 """
 
-from IPython.display import clear_output
 import time
 
 class Progress:
@@ -22,7 +21,7 @@ class Progress:
             self.separator = separator
 
         def get_value(self): 
-            return selt.value
+            return selt.values
 
         def __call__(self,value = None):
             if value != None:
@@ -125,10 +124,12 @@ class Progress:
         self.postfix = ""
         self.elements = []
         self.history = []
+        self.max_string_len = 0
     
     def initialize(self):
         self.val = 0
         self.history = []
+        self.max_string_len = 0
         if self.bar != None:
             self.bar.initialize_bar()
         if self.progress_time != None:
@@ -189,15 +190,16 @@ class Progress:
         self.output()
         
     def output(self):
-        clear_output(wait=True)
         bar = ""
         if self.bar_mode:
             bar = "{}"
             self.bar(self.val)
         out = self.prefix + bar + self.postfix
-        for h in self.history:
-            print(h)
-        print(out.format(*[e() for e in self.elements]))
+        update = "\r"+out.format(*[e() for e in self.elements])
+        string_len = len(update)
+        if string_len > self.max_string_len:
+            self.max_string_len = len(update)
+        print(update,end=" "*(self.max_string_len-string_len))
     
     def get_format(self): 
         bar = ""
@@ -214,3 +216,5 @@ class Progress:
         self.bar(self.val)
         history = out.format(*[ e() for e in self.elements])
         self.history.append(history) 
+        print("\r"+history)
+        self.max_string_len = 0
