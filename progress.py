@@ -12,13 +12,18 @@ class Progress:
     
     #Class Element
     class Elememt:
-        def __init__(self, name,initial_value,max_value = None,display_name="normal",value_display_mode=0,separator=":"):
+        def __init__(self, name,initial_value,max_value = None,display_name="normal",value_display_mode=0,separator=":",f=None):
             self.name = name
             self.value = initial_value
             self.value_display_mode = value_display_mode
             self.max_value = max_value
             self.display_name = display_name
             self.separator = separator
+            
+            if f != None:
+                self.floating_point = ":."+str(f)+"f"
+            else:
+                self.floating_point = ""
 
         def get_value(self): 
             return selt.values
@@ -30,13 +35,14 @@ class Progress:
 
         def get_element(self):
             element = ""
+
             if self.value_display_mode == 0:
-                element += " {} "
+                element += " {" + self.floating_point + "} "
             if self.value_display_mode == 1:
                 if self.max_value == None:
                     print("Error: display_mode '1', max_value for element is required.")
                     return "test"
-                element += " {}/" + str(self.max_value) + " "
+                element += " {" + self.floating_point + "}/" + str(self.max_value) + " "
             if self.display_name=="normal":
                 element = self.name + self.separator + element
             if self.display_name=="reverse":
@@ -49,39 +55,30 @@ class Progress:
     #Class Bar  
     class Bar:
         def __init__(self,max_value=None,bar_len=20, bar_marker="=", bar_pointer=">"):
-            self.bar = ""
-            self.time = None
             self.max_value = max_value
             self.val = 0
             self.bar_len = bar_len
             self.bar_marker = bar_marker
-            self.bar_pointer = bar_pointer
-            self.initialize_bar()
+            if len(bar_pointer) == 1:
+                self.bar_pointer = bar_pointer
+            else:
+                self.bar_pointer = " "
         
         def __call__(self,value = None):
             if value != None:
                 self.val = value
             return self.update_bar(self.val)
         
-        def initialize_bar(self):
-            self.bar = "["
-            for i in range(self.bar_len):
-                self.bar += " "
-            self.bar +="]"
-        
         def update_bar(self,val):
-            complete_persent = int((val * 100) / self.max_value) 
-            pointer_position  = int((complete_persent-1) / (100/self.bar_len)) + 1
-
-            if pointer_position == 1:
-                self.bar = self.bar[:pointer_position]+self.bar_pointer+self.bar[pointer_position+1:]
-            else:
-                self.bar = self.bar[:pointer_position-1]+self.bar_marker+self.bar_pointer+self.bar[pointer_position+1:]
-
-            if complete_persent == 100:
-                self.bar = self.bar[:pointer_position]+self.bar_marker+self.bar[pointer_position+1:]
+            persent = int((val * 100) / self.max_value) 
+            bar_unit = 100/self.bar_len
             
-            return self.bar
+            num_marker = int(persent/bar_unit)
+            
+            bar = self.bar_marker*num_marker+\
+                self.bar_pointer+\
+                " "*(self.bar_len -num_marker-1)
+            return "["+bar[:self.bar_len]+"]"
     
     class ProgressTime:
         def __init__(self, postfix=""):
@@ -129,9 +126,7 @@ class Progress:
     def initialize(self):
         self.val = 0
         self.history = []
-        self.max_string_len = 0
-        if self.bar != None:
-            self.bar.initialize_bar()
+        self.max_string_len = 0   
         if self.progress_time != None:
             self.progress_time.initialize()
     
@@ -183,8 +178,6 @@ class Progress:
         self.val += step
         if self.val > self.max_val:
             self.val = 1
-            if self.bar != None:
-                self.bar.initialize_bar()
             if self.progress_time != None:
                 self.progress_time.initialize()
         self.output()
@@ -194,12 +187,14 @@ class Progress:
         if self.bar_mode:
             bar = "{}"
             self.bar(self.val)
+            
         out = self.prefix + bar + self.postfix
         update = "\r"+out.format(*[e() for e in self.elements])
         string_len = len(update)
         if string_len > self.max_string_len:
             self.max_string_len = len(update)
-        print(update,end=" "*(self.max_string_len-string_len))
+            
+        print(update, end=" "*(self.max_string_len-string_len))
     
     def get_format(self): 
         bar = ""
@@ -216,5 +211,6 @@ class Progress:
         self.bar(self.val)
         history = out.format(*[ e() for e in self.elements])
         self.history.append(history) 
+
         print("\r"+history)
         self.max_string_len = 0
