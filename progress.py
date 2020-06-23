@@ -15,6 +15,7 @@ class Progress:
         def __init__(self, name,initial_value,max_value = None,display_name="normal",value_display_mode=0,separator=":",f=None):
             self.name = name
             self.value = initial_value
+            self.initial_value = initial_value
             self.value_display_mode = value_display_mode
             self.max_value = max_value
             self.display_name = display_name
@@ -49,20 +50,28 @@ class Progress:
                 element += self.name +" "
             if self.display_name == "hide":
                 pass
-
-            return element 
+            
+            return element
+        def reset(self):
+            self.value = self.initial_value
     
     #Class Bar  
     class Bar:
-        def __init__(self,max_value=None,bar_len=20, bar_marker="=", bar_pointer=">"):
-            self.max_value = max_value
+        def __init__(self, max_value=None, bar_len=25, fill="=", pointer=">"):
+            #Bar properties
             self.val = 0
+            self.max_value = max_value
             self.bar_len = bar_len
-            self.bar_marker = bar_marker
-            if len(bar_pointer) == 1:
-                self.bar_pointer = bar_pointer
+            
+            # style properties
+            self.fill = fill
+            self.empty_fill = ' '
+            self.prefix = '['
+            self.postfix = ']'
+            if len(pointer) == 1:
+                self.pointer = pointer
             else:
-                self.bar_pointer = " "
+                self.pointer = ""
         
         def __call__(self,value = None):
             if value != None:
@@ -73,12 +82,34 @@ class Progress:
             persent = int((val * 100) / self.max_value) 
             bar_unit = 100/self.bar_len
             
-            num_marker = int(persent/bar_unit)
+            num_fill = int(persent/bar_unit)
             
-            bar = self.bar_marker*num_marker+\
-                self.bar_pointer+\
-                " "*(self.bar_len -num_marker-1)
-            return "["+bar[:self.bar_len]+"]"
+            bar = self.fill*num_fill+\
+                self.pointer+\
+                self.empty_fill*(self.bar_len -num_fill- len(self.pointer))
+            return self.prefix + bar[:self.bar_len] + self.postfix
+        
+        def reset(self):
+            pass
+    
+    #Fill Bar class
+    class FillBar(Bar):
+        def __init__(self, mode=None, max_value=None, bar_len=25):
+            super().__init__(max_value=max_value, bar_len=bar_len, pointer="")
+            self.prefix = ''
+            self.postfix = ''
+            
+            if mode == "c" or mode =="circle" or mode == 0:
+                self.empty_fill = '○'
+                self.fill = '●'
+            if mode == "s" or mode =="square" or mode == 1: 
+                self.empty_fill = '□'
+                self.fill = '■'
+            if mode == None or mode =='n' or mode == "Normal" or mode == 2:
+                self.empty_fill = '●'
+                self.fill = '█'
+                self.prefix = '|'
+                self.postfix = '|'
     
     class ProgressTime:
         def __init__(self, postfix=""):
@@ -88,9 +119,6 @@ class Progress:
         def __call__(self):
             return self.calculate_elapsed_time()
             
-        def initialize(self):
-            self.start_time = time.time()
-            
         def calculate_elapsed_time(self):
             elapsed_time = time.time() - self.start_time
             if elapsed_time < 1:
@@ -98,7 +126,7 @@ class Progress:
                 
                 if elapsed_time < 1:
                     elapsed_time = (elapsed_time*1000)//1
-                    return str(int(elapsed_time))+"um"+self.postfix
+                    return str(int(elapsed_time))+"us"+self.postfix
                 else:
                     return str(int(elapsed_time))+"ms"+self.postfix
             else:
@@ -107,6 +135,9 @@ class Progress:
         def get_element(self):
             element = " {} "
             return element
+        
+        def reset(self):
+            self.start_time = time.time()
 
             
     def __init__(self, max_val, desc= "Step", mode = "no-bar"):
@@ -128,7 +159,7 @@ class Progress:
         self.history = []
         self.max_string_len = 0   
         if self.progress_time != None:
-            self.progress_time.initialize()
+            self.progress_time.reset()
     
     def add(self,element):
         if element == None:
@@ -151,7 +182,7 @@ class Progress:
             self.elements.append(element)
             return
         
-        if type(element) == Progress.Bar:
+        if type(element) == Progress.Bar or type(element) == Progress.FillBar:
             self.add_postfix = True
             element.max_value = self.max_val
             self.bar = element
@@ -178,8 +209,6 @@ class Progress:
         self.val += step
         if self.val > self.max_val:
             self.val = 1
-            if self.progress_time != None:
-                self.progress_time.initialize()
         self.output()
         
     def output(self):
@@ -206,11 +235,17 @@ class Progress:
         bar = ""
         if self.bar_mode:
             bar = "{}"
+            self.bar(self.val)
+        
+        # saving history of progress
         out = self.prefix + bar + self.postfix
-
-        self.bar(self.val)
         history = out.format(*[ e() for e in self.elements])
         self.history.append(history) 
-
-        print("\r"+history)
+        
+        # reset progress bar
+        for e in self.elements:
+            e.reset()
+        
+        #line Change
+        print()
         self.max_string_len = 0
