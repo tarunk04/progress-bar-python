@@ -52,49 +52,68 @@ Find the complete guide how to use this library step by step. Read medium post [
   bar = P.Bar()
   ```
 
-  Syntax for P.Element, P.Bar, and P.ProgressTime objects:
+  Syntax for P.Element, P.Bar, P.FillBar and P.ProgressTime objects:
 
   ```python
   # Element
-  P.Element(name,initial_value,max_value = None,display_name="normal",value_display_mode=0,separator=":")
-  """
-  Element Examples:
-  "Epochs: 1"
-  "Epochs: 1/10"
-  "1 Epochs"
+  P.Element(name, initial_value, max_value=None, display_name="normal", value_display_mode=0, separator=":")
+    """
+    Element Examples:
+        "Epochs: 1"
+        "Epochs: 1/10"
+        "1 Epochs"
+    
+    Parameters:
+        name (str): name for displaying in progress for the element
+        initial_value (float): initial value for the element
+        max_value (int): maximum value that element can take. Note only required in display_mode =1.
+        display_name (str): value can take form ["normal","reverse","hide"]. In "reverse" mode name will displayed
+                    after value. "hide" will hide the name from progress
+        value_display_mode (int): [0,1].default 0. Format "Epoch: 1". For 1 format "Epoch 1/10".
+        separator (char): default ":". can be changed according to preference
+        f (int) : Default None. floating point precision. 
+    """
   
-  Parameters:
-  name: name for displaying in progress for the element
-  initial_value: initial value for the element
-  max_value: maximum value that element can take. Note only required in display_mode =1.
-  display_name: value can take form ["normal","reverse","hide"]. In "reverse" mode name will displayed after value. 
-                "hide" will hide the name from progress
-  value_display_mode: [0,1].default 0. Format "Epoch: 1". For 1 format "Epoch 1/10".
-  separator: default ":". can be changed according to preference
-  """
   # Bar
-  P.Bar(max_value=None,bar_len=20, bar_marker="=", bar_pointer=">")
-  """
-  Element Examples:
-  [======>     ]
-  [------->          ]
+  P.Bar(max_value=None, bar_len=20, bar_marker="=", bar_pointer=">")
+    """
+    Element Examples:
+        [======>     ]
+        [------->          ]
+    
+    Parameters:
+        max_value (int): not required. it will be automatically taken from Progress object.
+        bar_len (int):  default 20. length for the bar. [==========>    ].
+        bar_marker (char): default "=" can be changed according to preference.
+        bar_marker (char): default ">" can be changed according to preference.
+    """
   
-  Parameters:
-  max_value: not required. it will be autometically taken from Progress object.
-  bar_len: lenght for the bar. [==========>    ]. default 20.
-  bar_marker: default "=" can be changed according to preference.
-  bar_marker: default ">" can be changed according to preference.
-  """
+  # FillBar
+  P.FillBar(mode=None, max_value=None, bar_len=25):
+    """
+    Bar style Fill
+    Example:
+        ●●●●●●●○○○○○○○
+        ■■■■■■□□□□□□□□
+        |█████○○○○○○○○○|
+
+    Parameters:
+        mode (char, str, int): Default: "normal", Mode can be 'circle' 'c' or 0, 'square' 's' or 1 and 'normal'
+                                'n' or 2.
+        max_value (int): not required. it will be automatically taken from Progress object.
+        bar_len (int):  default 20. length for the bar. [==========>    ].
+    """
+  
   # ProgressTime
   P.ProgressTime(postfix="")
-  """
-  Element Examples:
-  "100ms"
-  "112s/epochs"
-  
-  Parameters:
-  postfix: string after time
-  """
+    """
+    Element Examples:
+        "100ms"
+        "112s/epochs"
+    
+    Parameters:
+        postfix (str): string after time
+    """
   ```
 
 * Format/ combine all element. **Note: You can create elements in any order but while combining order matters.**

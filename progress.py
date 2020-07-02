@@ -1,5 +1,5 @@
 """
-Progress Bar For Jupyter Notebook
+Progress Bar - Simple and Fast
 ----------------------------------
 Simple and easy to use progress bar.
 
@@ -7,7 +7,6 @@ Author : Tarun Kumar
 """
 
 import time
-
 
 class Progress:
     """
@@ -20,8 +19,7 @@ class Progress:
         max_val (int): maximum value for progress.
         mode (str):  Default "no-bar". Take value 'bar' and 'no-bar'. Select the the mode for progress.
     """
-
-
+    
     class Elememt:
         """
         Element Examples:
@@ -37,6 +35,7 @@ class Progress:
                         after value. "hide" will hide the name from progress
             value_display_mode (int): [0,1].default 0. Format "Epoch: 1". For 1 format "Epoch 1/10".
             separator (char): default ":". can be changed according to preference
+            f (int) : Default None. floating point precision. 
         """
 
         def __init__(self, name, initial_value, max_value=None, display_name="normal", value_display_mode=0,
@@ -151,7 +150,7 @@ class Progress:
         Example:
             ●●●●●●●○○○○○○○
             ■■■■■■□□□□□□□□
-            █████○○○○○○○○○
+            |█████○○○○○○○○○|
 
         Parameters:
             mode (char, str, int): Default: "normal", Mode can be 'circle' 'c' or 0, 'square' 's' or 1 and 'normal'
@@ -187,6 +186,7 @@ class Progress:
         Parameters:
             postfix (str): string after time
         """
+
         def __init__(self, postfix=""):
             self.postfix = postfix
             self.start_time = 0
