@@ -142,7 +142,6 @@ Find the complete guide how to use this library step by step. Read medium post [
           """
           Other code block
           
-          
           ----------------
           """
           # updating progress bar elements. Values each elements can be updated by just passing the 
@@ -160,9 +159,9 @@ Find the complete guide how to use this library step by step. Read medium post [
       # setting new line for next epoch. Otherwise the new epoch progress will overwrite the old one.
       p.set_cursor_position()
   ```
-
-  ![result](screenshots/result.png)
-
+  
+![result](screenshots/result.png)
+  
 * Done 😎. Enjoy ✨.
 
  # Author
